@@ -1,10 +1,8 @@
 //const { spawn } = require("child_process")
 const { createConnection } = require("net");
 const { createInterface } = require("readline")
-const { b64coder, CryptorRSA, CryptorAES } = require('./crypt')
-
-const { password, iv } = require('./config.json')
-
+const { b64coder, CryptorAES } = require('./crypt')
+const {remote_address, remote_port, aes_password, aes_iv} = require('./client_config.json')
 
 // TOR routing
 /* const https = require("https");
@@ -19,13 +17,8 @@ https.get("https://ifconfig.me", {
 }); */
 
 
-const config = {
-    host: "192.168.10.102",
-    port: 5555
-}
-
 const b64 = new b64coder()
-const crypt = new CryptorAES(password, iv)
+const crypt = new CryptorAES(aes_password, aes_iv)
 
 
 function translate_out(cleartext){
@@ -35,12 +28,15 @@ function translate_out(cleartext){
 }
 
 function translate_in(ciphertext){
-    //console.log(ciphertext.toString())
     const decrypted = crypt.decrypt(ciphertext.toString())
     const decodedData = b64.decode_b64(decrypted)
     return(decodedData)
 }
 
+const config = {
+    host: remote_address,
+    port: remote_port
+}
 
 const client = createConnection(config, () => {
     const int = createInterface({
@@ -51,7 +47,6 @@ const client = createConnection(config, () => {
 
     int.on("line", (data) => {
         client.write(translate_out(data))
-        //int.prompt()
     })
 
     int.on("SIGINT", () => {
@@ -60,12 +55,10 @@ const client = createConnection(config, () => {
 
     client.on("data", (data) => {
         console.log(translate_in(data))
-        //int.prompt()
     });
      
     client.on("connect", (data) => {
          console.log("Connect Success")
-         //int.prompt()
     })
      
     client.on("error", (data) => {

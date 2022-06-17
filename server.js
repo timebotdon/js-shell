@@ -1,13 +1,10 @@
 const { createServer } = require("net")
 const { spawn } = require("child_process")
-const { CryptorRSA, CryptorAES, b64coder } = require('./crypt')
-
-const { password, iv } = require('./config.json')
+const { CryptorAES, b64coder } = require('./crypt')
+const {listen_address, listen_port, aes_password, aes_iv} = require('./server_config.json')
 
 const b64 = new b64coder()
-//const crypt = new CryptorRSA("./keys/public.pem", "./keys/private.pem")
-//const crypt = new CryptorRSA()
-const crypt = new CryptorAES(password, iv)
+const crypt = new CryptorAES(aes_password, aes_iv)
 
 function translate_out(cleartext){
     const encodedData = b64.encode_b64(cleartext.toString())
@@ -20,7 +17,6 @@ function translate_in(ciphertext){
     const decodedData = b64.decode_b64(decrypted)
     return(decodedData)
 }
-
 
 const server = createServer((socket) => {
     
@@ -56,11 +52,11 @@ const server = createServer((socket) => {
 })
 
 const config = {
-    host: "0.0.0.0",
-    port: 5555,
+    host: listen_address,
+    port: listen_port,
     exclusive: true
 }
 
 server.listen(config, () => { 
-    console.log(`INFO:Listening on ${config.host}:${config.port}`);
+    console.log(`INFO:Listening on ${listen_address}:${listen_port}`);
 });
