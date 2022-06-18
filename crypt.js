@@ -133,4 +133,4 @@ console.log(cleartext)
 */
 
 
-module.exports = { CryptorAES, CryptorRSA, b64coder }
+module.exports = { CryptorAES, CryptorRSA }
