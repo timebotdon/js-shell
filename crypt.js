@@ -1,5 +1,5 @@
 const { createCipheriv, createDecipheriv, generateKeyPairSync, publicEncrypt, privateDecrypt, constants } = require('crypto');
-const { writeFileSync, readFileSync, existsSync, mkdir, mkdirSync } = require('fs');
+const { writeFileSync, readFileSync, existsSync, mkdirSync } = require('fs');
 const path = require('path');
 
 class CryptorAES {
@@ -7,18 +7,17 @@ class CryptorAES {
         this.password = password
         this.iv = iv
     }
-    encrypt(cleartext) {
+
+    encrypt(chunk) {
         let cipher = createCipheriv("aes-256-ctr", this.password, this.iv);
-        let encText = cipher.update(cleartext, 'utf-8', 'hex');
-        encText += cipher.final('hex');
-        return (encText);
+        let result = Buffer.concat([cipher.update(chunk), cipher.final()]);
+        return result;
     }
 
-    decrypt(ciphertext) {
+    decrypt(chunk) {
         let decipher = createDecipheriv("aes-256-ctr", this.password, this.iv);
-        let decText = decipher.update(ciphertext, 'hex', 'utf-8');
-        decText += decipher.final('utf-8');
-        return (decText);
+        let result = Buffer.concat([decipher.update(chunk), decipher.final()]);
+        return result;
     }
 }
 
@@ -120,19 +119,6 @@ class CryptorRSA {
     }
 
 }
-
-class b64coder {
-    encode_b64(string){
-        let bufferObj = Buffer.from(string, "utf8");
-        return(bufferObj.toString("base64"));
-    }
-    
-    decode_b64(b64string){
-        let bufferObj = Buffer.from(b64string, "base64");
-        return(bufferObj.toString("utf8"));
-    }
-}
-
 
 /* 
 const pubkey = "./keys/public.pem"
