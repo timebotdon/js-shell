@@ -56,17 +56,16 @@ function Bind (){
         client.on("error", (data) => {
             switch(data.code){
                 case "ECONNRESET":
-                    console.log("Server connection reset.")
+                    console.log("INFO:Server connection reset.")
                     process.exit(1)
-                    break
                 default:
-                    console.log(data)
+                    console.log(`ERROR:${data}`)
                     break
             }
          })
          
         client.on("end", () => { 
-            console.log("disconnected from server");
+            console.log("INFO:Disconnected from server");
             process.exit(0)
         });
     });
@@ -112,12 +111,13 @@ function Reverse (){
                 case "ECONNRESET":
                     process.exit(1)
                 default:
-                    console.log(data)
+                    console.log(`ERROR:${data}`)
                     process.exit(1)
             }
          })
          
         client.on("end", () => { 
+            console.log("INFO:Disconnected from server");
             process.exit(0)
         });
     });
@@ -131,9 +131,11 @@ switch(process.argv[2]){
         Reverse()
         break
     default:
-        console.log("Define an operating mode!")
-        console.log("usage:")
-        console.log("node client r (Reverse connection)")
-        console.log("node client b (Bind connection)")
+        const helpText = "Define an operating mode!\n"
+        + "usage:\n"
+        + "node client r (Reverse connection)\n"
+        + "node client b (Bind connection)"
+        
+        console.log(helpText)
         process.exit(1)
 }

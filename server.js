@@ -41,7 +41,7 @@ function Bind(){
     
         const shell = spawn(shellcmd)
         console.log("INFO:client connected")
-        socket.write(translate_out("Connected to remote host"))
+        socket.write(translate_out("INFO:Connected to remote host"))
     
         // shell stdout to client
         shell.stdout.on("data", (data) => {
@@ -53,7 +53,7 @@ function Bind(){
         })
     
         shell.on("exit", () => {
-            console.log("INFO:client closed the shell")
+            console.log("INFO:Client closed the shell")
             process.exit(0)
         })
     
@@ -100,6 +100,10 @@ function Reverse(){
         socket.on("error", (err) => {
             console.log(`ERROR:${err}`)
         })
+
+        socket.on("end", () => {
+            console.log("INFO:client disconnected")
+        })
     })
     
     server.listen(config, () => {
@@ -117,9 +121,11 @@ switch(process.argv[2]){
         Reverse()
         break
     default:
-        console.log("Define an operating mode!")
-        console.log("usage:")
-        console.log("node server r (Reverse connection)")
-        console.log("node server b (Bind connection)")
+        const helpText = "Define an operating mode!\n"
+        + "usage:\n"
+        + "node server r (Reverse connection)\n"
+        + "node server b (Bind connection)"
+        
+        console.log(helpText)
         process.exit(1)
 }
