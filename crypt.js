@@ -22,6 +22,7 @@ class CryptorAES {
 }
 
 
+// EXPERIMENTAL
 class CryptorRSA {
     constructor(publicKeyPath, privateKeyPath) {
         this.publicKey
@@ -119,18 +120,5 @@ class CryptorRSA {
     }
 
 }
-
-/* 
-const pubkey = "./keys/public.pem"
-const privkey = "./keys/private.pem"
-const rsa = new CryptorRSA(pubkey, privkey)
-const data = "test";
-const ciphertext = rsa.encrypt(data)
-console.log(ciphertext)
-
-const cleartext = rsa.decrypt(ciphertext)
-console.log(cleartext)
-*/
-
 
 module.exports = { CryptorAES, CryptorRSA }
