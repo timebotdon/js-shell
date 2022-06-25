@@ -1,6 +1,9 @@
 {
     "remote_address": "192.168.10.102",
-    "remote_port": "8080",
+    "remote_port": 8080,
+    "use_socks_proxy": true,
+    "proxy_address": "192.168.10.100",
+    "proxy_port": 1080,
     "aes_password": "zwWwMDtftKxLo2FU5bVb47zdfcsW9RZx",
     "aes_iv": "DiXV9jbHdEXoTFoc"
 }

