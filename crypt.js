@@ -1,6 +1,6 @@
 const { createCipheriv, createDecipheriv, generateKeyPairSync, publicEncrypt, privateDecrypt, constants } = require('crypto');
-const { writeFileSync, readFileSync, existsSync, mkdirSync } = require('fs');
-const path = require('path');
+//const { writeFileSync, readFileSync, existsSync, mkdirSync } = require('fs');
+//const path = require('path');
 
 class CryptorAES {
     constructor(password, iv) {
@@ -21,7 +21,7 @@ class CryptorAES {
     }
 }
 
-
+/* 
 // EXPERIMENTAL
 class CryptorRSA {
     constructor(publicKeyPath, privateKeyPath) {
@@ -119,6 +119,6 @@ class CryptorRSA {
         return (decryptedData.toString());
     }
 
-}
+} */
 
-module.exports = { CryptorAES, CryptorRSA }
+module.exports = { CryptorAES }
