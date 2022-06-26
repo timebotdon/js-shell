@@ -26,7 +26,7 @@ npm install
 A JSON config file is required for the server to operate. Keys used in the server config:
 * `aes_password`: String. AES Cipher key. Must have 32 alphanumeric characters. 
 * `aes_iv`: String. AES Initalization Vector. Must have 16 alphanumeric characters.
-* `listen_address`: String. Local IP address.
+* `listen_address`: String. Local IP address/Hostname.
 * `listen_port`: Number. Port number.
 * `use_ngrok`: Boolean. Use `true` or `false` if exposing an ngrok endpoint.
 * `ngrok_authtoken`: String. ngrok authtoken.
@@ -70,10 +70,10 @@ In this aspect, the client component acts as th
 Keys used in the client config:
 * `aes_password`: String. AES Cipher key. Must have a 32 alphanumeric characters.
 * `aes_iv`: String. AES Initalization Vector. Must have a 16 alphanumeric characters.
-* `remote_address`: String. Remote IP address.
+* `remote_address`: String. Remote IP address/Hostname.
 * `remote_port`: Number. Remote Port number.
 * `use_socks_proxy`: Boolean. Use `true` or `false` if using a proxy. Supports Socks5 only.
-* `proxy_address`: String. Proxy IP address.
+* `proxy_address`: String. Proxy IP address/Hostname.
 * `proxy_port`: Number. Proxy Port number.
 
 It should be noted that the `aes_password` and `aes_iv` values MUST be the same for the server and client configs.
