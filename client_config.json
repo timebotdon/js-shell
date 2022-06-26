@@ -1,9 +1,9 @@
 {
-    "aes_password": "ChangeMe",
-    "aes_iv": "ChangeMe",
-    "remote_address": "0.0.0.0",
-    "remote_port": 8080,
-    "use_socks_proxy": false,
-    "proxy_address": "ChangeMe",
+    "aes_password": "cA3TcR9t3kfW9vYM9D2X5NJEzrSzfEAx",
+    "aes_iv": "zP9joVoh7tguTwr4",
+    "remote_address": "192.168.1.100",
+    "remote_port": 4444,
+    "use_socks_proxy": true,
+    "proxy_address": "192.168.1.101",
     "proxy_port": 1080
 }

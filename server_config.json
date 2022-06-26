@@ -1,8 +1,8 @@
 {
-    "aes_password": "ChangeMe",
-    "aes_iv": "ChangeMe",
+    "aes_password": "cA3TcR9t3kfW9vYM9D2X5NJEzrSzfEAx", 
+    "aes_iv": "zP9joVoh7tguTwr4",
     "listen_address": "0.0.0.0",
-    "listen_port": "8080",
-    "use_ngrok": false,
-    "ngrok_authtoken": "ChangeMe"
+    "listen_port": 4444,
+    "use_ngrok": true,
+    "ngrok_authtoken": "token"
 }
