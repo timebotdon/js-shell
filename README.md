@@ -65,7 +65,6 @@ $ node server.js -o r -c server_config.json
 ```
 
 ## Client
-In this aspect, the client component acts as th
 ### Configuration
 Keys used in the client config:
 * `aes_password`: String. AES Cipher key. Must have a 32 alphanumeric characters.
@@ -93,6 +92,7 @@ It should be noted that the `aes_password` and `aes_iv` values MUST be the same 
 }
 ```
 ### Start client
+Similiarly to the server, Bind mode is defaulted if the op mode is not specified.
 ```
 Options:
       --help        Show help                                          [boolean]
