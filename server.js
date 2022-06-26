@@ -3,6 +3,7 @@ const { createInterface } = require("readline")
 const { spawn } = require("child_process")
 const { CryptorAES } = require('./crypt')
 const yargs = require("yargs")
+const ngrok = require('ngrok')
 
 //convert text to encrypted buffer
 function translate_out(cleartext){
@@ -114,6 +115,17 @@ function Reverse(config){
     
 }
 
+async function Ngrok(token, exposeport){
+    const options = {
+        authtoken: token,
+        proto: 'tcp',
+        addr: exposeport
+    }
+
+    const url = await ngrok.connect(options)
+    console.log(`Started ngrok tunnel at ${url}`)
+}
+
 const argv = yargs
     .option('opmode', {
         alias: 'o',
@@ -142,6 +154,9 @@ if (argv.configfile !== undefined) {
         host: configfile.listen_address.toString(),
         port: parseInt(configfile.listen_port),
         exclusive: true
+    }
+    if (configfile.use_ngrok === true) {
+        Ngrok(configfile.ngrok_token, configfile.listen_port)
     }
 }
 
